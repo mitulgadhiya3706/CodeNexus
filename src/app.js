@@ -2,22 +2,51 @@ const express = require('express');
 
 const app = express();
 
-app.get("/user", (req, res) => {
-    res.send({firstname: "Mitul", lastname: "Gadhiya"})
-});
+app.use("/user", 
+    
+    (req, res, next) => {
+    console.log("Route handler 1 is running.");
+    next();
+    // res.send("Response 1.");
+    },
 
-app.post("/user", (req, res) => {
-    //saving data to DB
-    res.send("Data successfully saved to DB.")
-});
+    (req,res, next) => {
+    console.log("Route handler 2 is running.");
+    // res.send("Response 2.")]
+    next();
+    },
 
-app.delete("/user", (req, res) => {
-    res.send("Data deleted from DB.")
-});
+    (req,res, next) => {
+    console.log("Route handler 3 is running.");
+    // res.send("Response 3.")
+    next();
+    },
 
-app.use("/ipl", (req, res) => {
-    res.send("ipl scoreboard")
-});
+    (req,res, next) => {
+    console.log("Route handler 4 is running.");
+    // res.send("Response 4.")
+    next();
+    }
+);
+
+
+
+// app.get("/user", (req, res) => {
+//     res.send({firstname: "Mitul", lastname: "Gadhiya"})
+// });
+
+// app.post("/user", (req, res) => {
+//     //saving data to DB
+//     res.send("Data successfully saved to DB.") 
+// });
+
+// app.delete("/user", (req, res) => {
+//     res.send("Data deleted from DB.")
+// });
+
+// app.use("/ipl", (req, res) => {
+//     res.send("ipl scoreboard")
+// });
 
 // app.use("/test", (req, res) => {
 //     res.send("Hello from the server.")
