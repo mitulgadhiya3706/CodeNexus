@@ -2,32 +2,50 @@ const express = require('express');
 
 const app = express();
 
-app.use("/user", 
+const {adminAuth, userAuth} = require("./middlewares/auth");
+
+app.use("/admin", adminAuth);
+
+app.get("/user", userAuth,  (req,res) => {
+    res.send("userrr data.")
+});
+
+app.get("/admin/getAllData", (req,res) => {
+    adminAuth;
+    res.send("all data sent.")
+});
+
+app.get("/admin/deleteUser", (req, res) => {
+    res.send("deleted a user.")
+});
+
+// app.use("/user", 
     
-    (req, res, next) => {
-    console.log("Route handler 1 is running.");
-    next();
-    // res.send("Response 1.");
-    },
+//     (req, res, next) => {
+//     console.log("Route handler 1 is running.");
+//     next();
+//     // res.send("Response 1.");
+//     },
 
-    (req,res, next) => {
-    console.log("Route handler 2 is running.");
-    // res.send("Response 2.")]
-    next();
-    },
+//     (req,res, next) => {
+//     console.log("Route handler 2 is running.");
+//     // res.send("Response 2.")]
+//     next();
+//     },
 
-    (req,res, next) => {
-    console.log("Route handler 3 is running.");
-    // res.send("Response 3.")
-    next();
-    },
+//     (req,res, next) => {
+//     console.log("Route handler 3 is running.");
+//     // res.send("Response 3.")
+//     next();
+//     },
 
-    (req,res, next) => {
-    console.log("Route handler 4 is running.");
-    // res.send("Response 4.")
-    next();
-    }
-);
+//     (req,res, next) => {
+//     console.log("Route handler 4 is running.");
+//     // res.send("Response 4.")
+//     next();
+//     }
+// );
+
 
 
 
@@ -51,7 +69,6 @@ app.use("/user",
 // app.use("/test", (req, res) => {
 //     res.send("Hello from the server.")
 // });
-
 
 // app.use("/", (req, res) => {
 //     res.send("Go to the dashboard.")
