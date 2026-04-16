@@ -2,22 +2,46 @@ const express = require('express');
 
 const app = express();
 
-const {adminAuth, userAuth} = require("./middlewares/auth");
 
-app.use("/admin", adminAuth);
+/*WILDCARD ERROR HANDLING */
 
-app.get("/user", userAuth,  (req,res) => {
-    res.send("userrr data.")
-});
+app.get("/getUserData", (req, res) => {
+    throw new Error("abcde");
+    res.send("user data sent")
+})
 
-app.get("/admin/getAllData", (req,res) => {
-    adminAuth;
-    res.send("all data sent.")
-});
+app.use("/", (err, req, res, next) => {
+    if(err){
+        res.status(500).send("Something went wrong.")
+    }
+})
 
-app.get("/admin/deleteUser", (req, res) => {
-    res.send("deleted a user.")
-});
+
+
+
+/*AUTHENTICATION */
+
+// const {adminAuth, userAuth} = require("./middlewares/auth");
+
+// app.use("/admin", adminAuth);
+
+// app.get("/user", userAuth,  (req,res) => {
+//     res.send("userrr data.")
+// });
+
+// app.get("/admin/getAllData", (req,res) => {
+//     adminAuth;
+//     res.send("all data sent.")
+// });
+
+// app.get("/admin/deleteUser", (req, res) => {
+//     res.send("deleted a user.")
+// });
+
+
+
+
+/*ROUTING */
 
 // app.use("/user", 
     
