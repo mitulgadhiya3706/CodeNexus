@@ -79,14 +79,15 @@ app.patch("/user/:userId", async (req, res) => {
 
     try{
 
-        const ALLOWED_UPDATES = ["userId", "about", "skills", "photoUrl", "age", "gender"];
+        const ALLOWED_UPDATES = ["about", "skills", "photoUrl", "age", "gender"];
         const isAllowedUpdates = Object.keys(data).every((key) => 
             ALLOWED_UPDATES.includes(key));
 
         if(!isAllowedUpdates){
             throw new Error ("Updates not allowed");
         }
-        if(data?.skills.length > 10){
+
+        if (data.skills && data.skills.length > 10) {
             throw new Error("Skills can't be more than 10")
         }
 
@@ -94,7 +95,7 @@ app.patch("/user/:userId", async (req, res) => {
         res.send("User updated successfully.")
 
     } catch(err){
-        res.status(400).send("Something went wrong!!")
+        res.status(400).send("Error:" +err.message)
     }
 })
 
