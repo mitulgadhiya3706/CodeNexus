@@ -40,7 +40,6 @@ requestRouter.post("/request/send/:status/:toUserId", userAuth,  async (req, res
             .status(400)
             .json({message: "Connection request already exists!!"})
         }
-
         
 
         const data = await connectionRequest.save();
