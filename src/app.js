@@ -7,14 +7,24 @@ const cors = require("cors");
 const http = require("http");
 const initializeSocket = require("./utils/socket")
 
+const allowedOrigins = [
+    process.env.FRONTEND_URL?.replace(/\/+$/, ""),
+    "http://localhost:5173",
+].filter(Boolean);
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
 }));
 
 app.use(express.json());      //middleware to parse JSON req. body  (convert JSON -> JS object)
 app.use(cookieParser());
+app.set("trust proxy", 1);
 
 const authRouter = require('./routes/auth');  
 const profileRouter = require('./routes/profile');
@@ -37,7 +47,7 @@ connectDB()
     .then(() => {
         console.log("Database connection established...")
         server.listen(process.env.PORT, () => {
-            console.log(`Server is running on port {process.env.PORT}...`);
+            console.log(`Server is running on port ${process.env.PORT}...`);
         });
     })
     .catch((err) => {

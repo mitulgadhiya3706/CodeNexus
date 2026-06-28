@@ -11,9 +11,15 @@ const getSecretRoomId = (userId, targetUserId) => {
 };
 
 const initializeSocket = (server) => {
+    const allowedOrigins = [
+        process.env.FRONTEND_URL?.replace(/\/+$/, ""),
+        "http://localhost:5173",
+    ].filter(Boolean);
+
     const io = socket(server, {
         cors: {
-            origin: "http://localhost:5173",
+            origin: allowedOrigins,
+            credentials: true,
         },
     });
 

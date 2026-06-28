@@ -3,7 +3,14 @@ const User = require("../models/user")
 
 const userAuth = async (req, res, next) => {
     try{
-        const { token } = req.cookies;
+        let token = req.cookies?.token;
+        if (!token && req.headers.authorization) {
+            const authHeader = req.headers.authorization;
+            if (authHeader.startsWith("Bearer ")) {
+                token = authHeader.split(" ")[1];
+            }
+        }
+
         if(!token){
             return res.status(401).send("Please Login!");
         }
@@ -21,7 +28,7 @@ const userAuth = async (req, res, next) => {
         req.user = user;
         next();
     }catch(err){
-        res.status(400).send("ERROR: "+ err.message);
+        res.status(401).send("ERROR: "+ err.message);
     }
 }
 
