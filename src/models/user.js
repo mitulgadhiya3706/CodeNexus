@@ -51,6 +51,13 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: "This is default for user."
     },
+    isPremium: {
+        type: Boolean,
+        default: false,
+    },
+    membershipType: {
+        type: String,
+    },
     photoUrl: {
         type: String,
         default: "https://toppng.com/show_download/239768/donna-picarro-dummy-avatar",

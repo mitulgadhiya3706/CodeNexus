@@ -22,7 +22,18 @@ app.use(cors({
     credentials: true,
 }));
 
-app.use(express.json());      //middleware to parse JSON req. body  (convert JSON -> JS object)
+// // Middleware to capture raw body for webhook signature validation
+// app.use((req, res, next) => {
+//     if (req.path === '/payment/webhook') {
+//         express.raw({ type: 'application/json' })(req, res, () => {
+//             req.rawBody = req.body;
+//             express.json()(req, res, next);
+//         });
+//     } else {
+//         express.json()(req, res, next);
+//     }
+// });
+
 app.use(cookieParser());
 app.set("trust proxy", 1);
 
