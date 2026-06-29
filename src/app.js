@@ -22,22 +22,22 @@ app.use(cors({
     credentials: true,
 }));
 
-// // Middleware to capture raw body for webhook signature validation
-// app.use((req, res, next) => {
-//     if (req.path === '/payment/webhook') {
-//         express.raw({ type: 'application/json' })(req, res, () => {
-//             req.rawBody = req.body;
-//             express.json()(req, res, next);
-//         });
-//     } else {
-//         express.json()(req, res, next);
-//     }
-// });
+// Middleware to capture raw body for webhook signature validation
+app.use((req, res, next) => {
+    if (req.path === '/payment/webhook') {
+        express.raw({ type: 'application/json' })(req, res, () => {
+            req.rawBody = req.body;
+            express.json()(req, res, next);
+        });
+    } else {
+        express.json()(req, res, next);
+    }
+});
 
 app.use(cookieParser());
 app.set("trust proxy", 1);
 
-const authRouter = require('./routes/auth');  
+const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
 const requestRouter = require('./routes/requests');
 const userRouter = require('./routes/user')
@@ -51,6 +51,11 @@ app.use('/', userRouter);
 app.use('/', chatRouter);
 app.use('/', paymentRouter);
 
+// Health check route
+app.get("/", (req, res) => {
+    res.send("CodeNexus Backend Running 🚀");
+});
+
 const server = http.createServer(app);
 initializeSocket(server);
 
@@ -62,5 +67,5 @@ connectDB()
         });
     })
     .catch((err) => {
-        console.error("Database can't be connected!!");        
+        console.error("Database can't be connected!!");
     })  
