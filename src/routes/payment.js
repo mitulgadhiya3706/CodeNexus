@@ -41,25 +41,34 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
 });
 
 paymentRouter.post("/payment/webhook", async (req, res) => {
+    console.log("========== WEBHOOK HIT ==========");
+    console.log("Headers:", req.headers);
+
     try {
-        const webhookSignature = req.headers["x-razorpay-signature"]
-        console.log("webhook Signature", webhookSignature)
+        const webhookSignature = req.headers["x-razorpay-signature"];
+        console.log("webhook Signature", webhookSignature);
+
+        console.log("Body:", req.body);
+
+        const payload = req.rawBody || JSON.stringify(req.body);
 
         const isWebhookValid = validateWebhookSignature(
-            JSON.stringify(req.body),
+            payload,
             webhookSignature,
             process.env.RAZORPAY_WEBHOOK_SECRET
         );
 
-        if(!isWebhookValid){
+        console.log("Webhook Valid:", isWebhookValid);
+
+        if (!isWebhookValid) {
             console.error("Invalid webhook signature");
-            return res.status(401).json({ msg: "Webhook signature is invalid"});
+            return res.status(401).json({ msg: "Webhook signature is invalid" });
         }
 
         //Update payment Status in DB
         const paymentDetails = req.body.payload.payment.entity;
 
-        const payment = await Payment.findOne({ orderId: paymentDetails.order_id } );
+        const payment = await Payment.findOne({ orderId: paymentDetails.order_id });
         if (!payment) {
             console.error("Payment not found for orderId:", paymentDetails.order_id);
             return res.status(404).json({ msg: "Payment record not found" });
