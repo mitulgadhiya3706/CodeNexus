@@ -22,17 +22,23 @@ app.use(cors({
     credentials: true,
 }));
 
-// Middleware to capture raw body for webhook signature validation
-app.use((req, res, next) => {
-    if (req.path === '/payment/webhook') {
-        express.raw({ type: 'application/json' })(req, res, () => {
-            req.rawBody = req.body;
-            express.json()(req, res, next);
-        });
-    } else {
-        express.json()(req, res, next);
-    }
-});
+// // Middleware to capture raw body for webhook signature validation
+// app.use((req, res, next) => {
+//     if (req.path === '/payment/webhook') {
+//         express.raw({ type: 'application/json' })(req, res, () => {
+//             req.rawBody = req.body;
+//             express.json()(req, res, next);
+//         });
+//     } else {
+//         express.json()(req, res, next);
+//     }
+// });
+
+// Webhook route needs raw body
+app.use("/payment/webhook", express.raw({ type: "application/json" }));
+
+// All other routes use JSON
+app.use(express.json());
 
 app.use(cookieParser());
 app.set("trust proxy", 1);
