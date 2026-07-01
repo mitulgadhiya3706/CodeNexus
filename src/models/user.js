@@ -57,6 +57,8 @@ const UserSchema = new mongoose.Schema({
     },
     membershipType: {
         type: String,
+        enum: ["silver", "gold", ""],
+        default: "",
     },
     photoUrl: {
         type: String,
