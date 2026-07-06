@@ -12,10 +12,6 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
     try {
         const membershipType = req.body?.membershipType;
 
-        if (!membershipType || !membershipAmount[membershipType]) {
-            return res.status(400).json({ msg: "Please provide a valid membershipType: silver or gold" });
-        }
-
         const order = await razorpayInstance.orders.create({
             amount: membershipAmount[membershipType] * 100,
             currency: "INR",
@@ -50,12 +46,8 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
 
 paymentRouter.post("/payment/verify", userAuth, async (req, res) => {
     try {
-        //const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body;
-        const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body || {};
-
-        if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
-            return res.status(400).json({ msg: "Missing payment verification fields" });
-        }
+        // const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body || {};
+        const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body;
 
         const body = razorpay_order_id + "|" + razorpay_payment_id;
 

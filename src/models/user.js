@@ -32,9 +32,36 @@ const UserSchema = new mongoose.Schema({
             }
         }
     },
+    photoUrl: {
+        type: String,
+        default: "https://toppng.com/show_download/239768/donna-picarro-dummy-avatar",
+        validate(value){
+            if(!validator.isURL(value)){
+                throw new Error("Photo url is not valid.");
+            }
+        }
+    },
     age: {
         type: Number,
         min: 18
+    },
+    gitHubUrl: {
+      type: String,
+      default: "https://github.com/",
+      validate(value) {
+        if (value && !validator.isURL(value)) {
+          throw new Error("gitHubUrl  is not valid ");
+        }
+      },
+    },
+    linkedInUrl: {
+      type: String,
+      default: "https://www.linkedin.com/",
+      validate(value) {
+        if (value && !validator.isURL(value)) {
+          throw new Error("linkedInUrl  is not valid ");
+        }
+      },
     },
     gender: {
         type: String,
@@ -60,15 +87,7 @@ const UserSchema = new mongoose.Schema({
         enum: ["silver", "gold", ""],
         default: "",
     },
-    photoUrl: {
-        type: String,
-        default: "https://toppng.com/show_download/239768/donna-picarro-dummy-avatar",
-        validate(value){
-            if(!validator.isURL(value)){
-                throw new Error("Photo url is not valid.");
-            }
-        }
-    }
+    
     
 }, 
 {
