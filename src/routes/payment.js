@@ -68,11 +68,10 @@ paymentRouter.post("/payment/verify", userAuth, async (req, res) => {
         const payment = await Payment.findOne({
             orderId: razorpay_order_id,
         });
-
         if (!payment) {
             return res.status(404).json({ msg: "Payment not found" }); 
         }
-
+        // Update payment status in DB 
         payment.paymentId = razorpay_payment_id;
         payment.status = "captured";
         await payment.save();
@@ -81,7 +80,6 @@ paymentRouter.post("/payment/verify", userAuth, async (req, res) => {
         if (!user) {
             return res.status(404).json({ msg: "User not found" });
         }
-
         user.isPremium = true;
         user.membershipType = payment.notes?.membershipType || "";
         await user.save();
