@@ -8,46 +8,56 @@ const { validateProfileEditData } = require('../utils/validation');
 const { validateOldPassword } = require('../utils/validation');
 
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
-    try{
+    try {
         const user = req.user;
         res.send(user);
-    } catch(err){
-        res.status(400).send("ERROR: "+ err.message);
+    } catch (err) {
+        res.status(400).send("ERROR: " + err.message);
     }
 });
 
 
 profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
-    try{
-        if(!validateProfileEditData(req)){
+    try {
+        if (!validateProfileEditData(req)) {
             throw new Error("Invalid edit request.");
         }
 
         const loggedInUser = req.user;
 
-        Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]));
+        // Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]));
+        Object.keys(req.body).forEach((key) => {
+            if (key === "skills" && typeof req.body.skills === "string") {
+                loggedInUser.skills = req.body.skills
+                    .split(",")
+                    .map(skill => skill.trim())
+                    .filter(skill => skill);
+            } else {
+                loggedInUser[key] = req.body[key];
+            }
+        });
 
         await loggedInUser.save();
-        
+
         res.json({
             message: `${loggedInUser.firstName}, your profile updated successfully.`,
             data: loggedInUser,
         });
 
-    } catch(err){
-        res.status(400).send("ERROR: "+ err.message);
+    } catch (err) {
+        res.status(400).send("ERROR: " + err.message);
     }
 });
 
 
 profileRouter.patch("/profile/changePassword", userAuth, async (req, res) => {
-    try{
+    try {
         const { oldPassword, newPassword } = req.body;
         const user = req.user;
 
         await validateOldPassword(req, user);
-        
-        if(!validator.isStrongPassword(newPassword)){
+
+        if (!validator.isStrongPassword(newPassword)) {
             throw new Error("Password is not strong.")
         }
 
@@ -58,8 +68,8 @@ profileRouter.patch("/profile/changePassword", userAuth, async (req, res) => {
 
         res.send("Password updated successfully.");
 
-    } catch(err){
-        res.status(400).send("ERROR: "+ err.message);
+    } catch (err) {
+        res.status(400).send("ERROR: " + err.message);
     }
 })
 

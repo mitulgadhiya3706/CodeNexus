@@ -26,7 +26,9 @@ authRouter.post("/signup", async (req, res) => {
         });
 
         await user.save();
-        res.send("User added successfully.")
+        // res.send("User added successfully.")
+        await user.save();
+        res.status(201).json(user);
     } catch (err) {
         res.status(400).send("Error saving the user:" + err.message);
     }
@@ -69,8 +71,8 @@ authRouter.post("/logout", async (req, res) => {
     res.cookie("token", null, {
         expires: new Date(Date.now()),
         httpOnly: true,
-        secure: true,   
-        sameSite: "none"    
+        secure: true,
+        sameSite: "none"
     });
     res.send("Logout successful");
 });
