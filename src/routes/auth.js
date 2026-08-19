@@ -27,7 +27,6 @@ authRouter.post("/signup", async (req, res) => {
 
         await user.save();
         // res.send("User added successfully.")
-        await user.save();
         res.status(201).json(user);
     } catch (err) {
         res.status(400).send("Error saving the user:" + err.message);
@@ -42,7 +41,7 @@ authRouter.post("/login", async (req, res) => {
         const user = await User.findOne({ emailId: emailId });
         if (!user) {
             throw new Error("Invalid credentials");
-        }
+        }   
 
         const isValidPassword = await user.validatePassword(password);
         if (isValidPassword) {
@@ -74,7 +73,7 @@ authRouter.post("/logout", async (req, res) => {
         secure: true,
         sameSite: "none"
     });
-    res.send("Logout successful");
+    res.send("Logout successfully.");
 });
 
 module.exports = authRouter;
